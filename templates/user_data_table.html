@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        .modal-body,.modal-title{
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<header>
+    <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+<h1>All {{ data.1 }} Users</h1>
+<nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto gap-2">
+
+    <a href="{% url 'dashboard'%}" class="btn btn-primary">Back to Dashboard</a>
+</nav>
+    </div>
+</header>
+    <table class="table table-dark table-striped">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in data.0 %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.address }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.status }}</td>
+                <td>
+                    <form action="{% url 'dlt_user' user.id %}" method="post"
+                          onsubmit="return confirm('Do you want to delete {{ user.name }}\'s data?')">
+                        {% csrf_token %}
+                        <input class="btn btn-danger" type="submit" value="Delete">
+
+                        <a href="{% url 'get_user_data' user.id %}" class="btn btn-primary">Edit</a>
+                        <!-- Button trigger modal -->
+                        <a type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal" onclick="userdataView({{ user.id }},'{{ user.name }}','{{ user.email }}','{{ user.phone }}','{{ user.role }}','{{ user.status }}')">
+                            View
+                        </a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+
+                                    </div>
+                                    <div class="modal-body">
+                                        <h3>Id: <span id="userId"></span></h3>
+                                        <h3>Name: <span id="userName"></span></h3>
+                                        <h3>Email: <span id="userEmail"></span></h3>
+                                        <h3>Phone: <span id="userPhone"></span></h3>
+                                        <h3>Role: <span id="userRole"></span></h3>
+                                        <h3>Status: <span id="userStatus"></span></h3>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="{% url 'dashboard' %}">
+                                        <button type="button" class="btn btn-primary">Back To Dashboard</button>
+                                            </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </td>
+
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        function userdataView(id,name,email,phone,role,status){
+            document.getElementById('userId').innerHTML=id;
+            document.getElementById('userName').innerHTML=name;
+            document.getElementById('userEmail').innerHTML=email;
+            document.getElementById('userPhone').innerHTML=phone;
+            document.getElementById('userRole').innerHTML=role;
+            document.getElementById('userStatus').innerHTML=status;
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js
+"></script>
+</div>
+</body>
+</html>
